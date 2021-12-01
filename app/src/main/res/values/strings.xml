@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ForaSoftTest</string>
+
+    <string name="text_empty_list_hint">Воспользуйтесь поиском, чтобы\nнайти альбом</string>
+
+    <string name="text_name_of_album">Название альбома</string>
+    <string name="text_count_of_tracks">Количество треков: 5</string>
+    <string name="text_album_genre">Рок</string>
+
+    <string name="text_track_name">Название песни</string>
+    <string name="text_track_time">2:37 мин</string>
+    <string name="text_track_price">15 руб</string>
+
+
+    <string name="image_view_description">some description</string>
+    <string name="title_menu_search">Поиск альбома</string>
+</resources>

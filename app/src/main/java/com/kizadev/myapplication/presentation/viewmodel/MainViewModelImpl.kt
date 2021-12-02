@@ -1,5 +1,6 @@
 package com.kizadev.myapplication.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kizadev.myapplication.data.local.model.AlbumItem
@@ -10,10 +11,12 @@ import com.kizadev.myapplication.presentation.viewmodel.state.MainScreenState
 import com.kizadev.myapplication.presentation.viewmodel.state.ScreenState
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.lang.IllegalArgumentException
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -27,10 +30,14 @@ class MainViewModelImpl @Inject constructor(
 
     override fun handleSearchQuery(searchQuery: String?) {
 
+        Log.e("ViewModel", "$searchQuery", )
 
         if (!searchQuery.isNullOrBlank()) {
+
+            val query = searchQuery.trimEnd()
+
             searchSubject
-                .onNext(searchQuery)
+                .onNext(query)
 
             updateState {
                 it.copy(
@@ -53,23 +60,26 @@ class MainViewModelImpl @Inject constructor(
                 )
 
             }
+
             compositeDisposable.clear()
+
         }
 
+
         val disposable = searchSubject
-            .debounce(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+            .debounce(300, TimeUnit.MILLISECONDS)
             .filter { query ->
                 query.isNotBlank()
             }
             .distinctUntilChanged()
             .subscribe { newQuery ->
 
-                albumListUseCaseImpl.getAlbums(newQuery) { response ->
+                albumListUseCaseImpl.getAlbums(newQuery!!) { response ->
 
                     when (response) {
 
                         is ResponseResult.Success -> {
-
+                            Log.e("ViewModelResult", "${response.result.albumList}", )
                             updateState {
                                 it.copy(
                                     albumList = response.result.albumList as MutableList<AlbumItem>,

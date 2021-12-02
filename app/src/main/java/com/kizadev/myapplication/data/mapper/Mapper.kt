@@ -38,7 +38,7 @@ fun AlbumDetailsDto.mapToAlbumDetailsModel(): AlbumDetailsModel {
         }
 
     return AlbumDetailsModel(
-        albumTracksList = trackList
+        albumTracksList = trackList,
     )
 }
 

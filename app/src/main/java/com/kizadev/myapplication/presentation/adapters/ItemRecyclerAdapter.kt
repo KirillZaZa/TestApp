@@ -1,25 +1,30 @@
 package com.kizadev.myapplication.presentation.adapters
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kizadev.myapplication.R
+import com.kizadev.myapplication.presentation.listeners.OnItemClick
 import com.kizadev.myapplication.presentation.viewholders.AlbumViewHolder
 import com.kizadev.myapplication.presentation.viewholders.TrackViewHolder
 import com.kizadev.myapplication.presentation.viewholders.ViewHolder
 
 class ItemRecyclerAdapter<T>(
-    private val itemType: ItemType
+    private val itemType: ItemType,
 ) : RecyclerView.Adapter<ViewHolder<T>>() {
 
     private lateinit var initList: MutableList<T>
+    private lateinit var onItemListener: OnItemClick
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(newList: MutableList<T>) {
         initList = newList
         notifyDataSetChanged()
+    }
+
+    fun setOnItemListener(listener: OnItemClick){
+        onItemListener = listener
     }
 
 
@@ -46,11 +51,18 @@ class ItemRecyclerAdapter<T>(
 
     override fun onBindViewHolder(viewHolder: ViewHolder<T>, position: Int) {
         val item = initList[position]
+
         viewHolder.bind(item)
+
+        viewHolder.itemView.setOnClickListener {
+            onItemListener.onItemClick(position)
+        }
+
     }
 
     override fun getItemCount(): Int {
         return initList.size
     }
+
 
 }

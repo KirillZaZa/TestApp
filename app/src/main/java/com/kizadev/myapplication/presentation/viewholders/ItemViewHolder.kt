@@ -14,12 +14,14 @@ import com.kizadev.myapplication.data.local.model.TrackItem
 import com.kizadev.myapplication.databinding.AlbumItemBinding
 import com.kizadev.myapplication.databinding.TrackItemBinding
 import com.kizadev.myapplication.extensions.dpToPx
+import com.kizadev.myapplication.presentation.listeners.OnItemClick
 
 class AlbumViewHolder(
-    itemView: View
+    itemView: View,
 ) : ViewHolder<AlbumItem>(itemView) {
 
     private val viewBinding by viewBinding(AlbumItemBinding::bind)
+
 
     override fun bind(model: AlbumItem) {
         val context = itemView.context
@@ -36,13 +38,16 @@ class AlbumViewHolder(
                 .into(ivImageAlbumItem)
 
         }
+
     }
+
 
 
 }
 
 class TrackViewHolder(
-    itemView: View
+    itemView: View,
+
 ) : ViewHolder<TrackItem>(itemView){
 
 
@@ -73,6 +78,7 @@ class ItemOffsetDecoration: RecyclerView.ItemDecoration(){
             }
 
             parent.adapter!!.itemCount - 1 -> {
+
                 outRect.top = view.context.dpToPx(offsetY)
                 outRect.bottom = view.context.dpToPx(offsetYLast)
 

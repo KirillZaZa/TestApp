@@ -4,6 +4,7 @@ import android.app.Application
 import com.kizadev.myapplication.di.modules.MainModule
 import com.kizadev.myapplication.presentation.activity.MainActivity
 import com.kizadev.myapplication.presentation.fragments.AlbumDetailsFragment
+import com.kizadev.myapplication.presentation.fragments.MainFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -12,7 +13,7 @@ import javax.inject.Singleton
 @Component(modules = [MainModule::class])
 interface ForaComponent {
 
-    fun inject(activity: MainActivity)
+    fun inject(mainFragment: MainFragment)
 
     fun inject(fragment: AlbumDetailsFragment)
 

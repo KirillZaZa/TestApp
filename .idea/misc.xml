@@ -3,10 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/drawable/rounded_corners_shape.xml" value="0.22760416666666666" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/drawable/search_shape.xml" value="0.22760416666666666" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/album_item.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/album_songs_fragment.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/album_track_fragment.xml" value="0.2" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/custom_search_view.xml" value="0.264" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/fragment_container.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/fragment_view.xml" value="0.23072916666666668" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/MyApplication/app/src/main/res/layout/main_fragment.xml" value="0.25" />

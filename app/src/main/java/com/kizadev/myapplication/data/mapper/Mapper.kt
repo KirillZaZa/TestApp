@@ -17,7 +17,7 @@ fun AlbumListDto.Result.mapToAlbumItem() = AlbumItem(
     },
     albumName = this.collectionName,
     albumTrackCount = buildString {
-        append("Количество треков: ")
+        append("Песен: ")
         append(trackCount)
     },
     albumPrice = "${this.collectionPrice}",

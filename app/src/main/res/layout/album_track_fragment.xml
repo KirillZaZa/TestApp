@@ -22,7 +22,7 @@
             app:titleCollapseMode="scale"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|snap">
+            app:layout_scrollFlags="snapMargins|exitUntilCollapsed">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/album_info_container"

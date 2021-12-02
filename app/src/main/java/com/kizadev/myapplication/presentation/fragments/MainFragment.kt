@@ -1,46 +1,57 @@
 package com.kizadev.myapplication.presentation.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
+import android.view.inputmethod.EditorInfo
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.kizadev.myapplication.R
 import com.kizadev.myapplication.application.foraComponent
 import com.kizadev.myapplication.data.local.model.AlbumItem
-import com.kizadev.myapplication.databinding.ActivityMainBinding
 import com.kizadev.myapplication.databinding.MainFragmentBinding
-import com.kizadev.myapplication.presentation.activity.IMainFragment
-import com.kizadev.myapplication.presentation.activity.MainActivity
 import com.kizadev.myapplication.presentation.adapters.ItemRecyclerAdapter
 import com.kizadev.myapplication.presentation.adapters.ItemType
 import com.kizadev.myapplication.presentation.listeners.OnItemClick
+import com.kizadev.myapplication.presentation.ui.SearchEditText
 import com.kizadev.myapplication.presentation.viewholders.ItemOffsetDecoration
 import com.kizadev.myapplication.presentation.viewmodel.MainViewModelFactory
 import com.kizadev.myapplication.presentation.viewmodel.MainViewModelImpl
+import com.kizadev.myapplication.presentation.viewmodel.mapper.toSearchState
 import com.kizadev.myapplication.presentation.viewmodel.state.MainScreenState
 import com.kizadev.myapplication.presentation.viewmodel.state.ScreenState
+import com.kizadev.myapplication.presentation.viewmodel.state.SearchState
 import javax.inject.Inject
 
-class MainFragment: Fragment(), IMainFragment, OnItemClick {
+class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyImeChange {
 
-    private lateinit var searchView: SearchView
+
+    private lateinit var searchEditText: SearchEditText
 
     private val mainViewModel: MainViewModelImpl by viewModels {
         mainViewModelFactory.create()
     }
 
+
+
     private lateinit var viewBinding: MainFragmentBinding
+
+
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory.Factory
 
 
+
     private lateinit var adapter: ItemRecyclerAdapter<AlbumItem>
+
+    override fun onAttach(context: Context) {
+        context.foraComponent.inject(this)
+        super.onAttach(context)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +59,15 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
 
         setHasOptionsMenu(true)
 
-        requireContext().foraComponent.inject(this)
 
+
+        mainViewModel.observeState(this, ::renderData)
+
+        mainViewModel.observeSubState(
+            this,
+            MainScreenState::toSearchState,
+            ::renderSearch
+        )
 
 
     }
@@ -62,13 +80,10 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
 
         viewBinding = MainFragmentBinding.inflate(inflater, container, false)
 
-        Log.e("MainFragment", "viewModel: ${mainViewModel.currentState}", )
+        setupSearch()
 
         initViews()
 
-        mainViewModel.observeState(this){
-            renderData(it)
-        }
 
 
         return viewBinding.root
@@ -81,18 +96,21 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
 
         adapter.setOnItemListener(this)
 
-        viewBinding.rvAlbum.layoutManager = LinearLayoutManager(requireContext())
-        viewBinding.rvAlbum.addItemDecoration(ItemOffsetDecoration())
-        viewBinding.rvAlbum.adapter = adapter
+
+        with(viewBinding) {
+            rvAlbum.layoutManager = LinearLayoutManager(requireContext())
+            rvAlbum.addItemDecoration(ItemOffsetDecoration())
+            rvAlbum.adapter = adapter
+        }
+
 
     }
 
     override fun renderData(screenState: MainScreenState) {
-        Log.e("MainFragment", "renderData: $screenState", )
-        when(screenState.screenState){
+        when (screenState.screenState) {
 
-            ScreenState.LOADING-> {
-                with(viewBinding){
+            ScreenState.LOADING -> {
+                with(viewBinding) {
                     tvEmptyListInfo.visibility = View.GONE
                     rvAlbum.visibility = View.GONE
 
@@ -100,8 +118,8 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
                 }
             }
 
-            ScreenState.SHOW_LIST->{
-                with(viewBinding){
+            ScreenState.SHOW_LIST -> {
+                with(viewBinding) {
                     tvEmptyListInfo.visibility = View.GONE
                     progressBar.visibility = View.GONE
 
@@ -111,7 +129,7 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
             }
 
             ScreenState.ERROR -> {
-                with(viewBinding){
+                with(viewBinding) {
                     rvAlbum.visibility = View.GONE
                     progressBar.visibility = View.GONE
 
@@ -121,7 +139,7 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
             }
 
             ScreenState.EMPTY_LIST -> {
-                with(viewBinding){
+                with(viewBinding) {
                     rvAlbum.visibility = View.GONE
                     progressBar.visibility = View.GONE
 
@@ -132,7 +150,7 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
             }
 
             ScreenState.FAILED -> {
-                with(viewBinding){
+                with(viewBinding) {
                     rvAlbum.visibility = View.GONE
                     progressBar.visibility = View.GONE
 
@@ -144,71 +162,45 @@ class MainFragment: Fragment(), IMainFragment, OnItemClick {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu, menu)
-        val menuItem = menu.findItem(R.id.action_search)
+    override fun setupSearch() {
+        searchEditText = viewBinding.customSearchView.searchBinding.searchEditText
+        searchEditText.setOnKeyImeChangeListener(this)
 
-        searchView = (menuItem.actionView as SearchView)
-        searchView.queryHint = getString(R.string.search_hint)
-
-        if (mainViewModel.currentState.isSearchOpened){
-
-            menuItem.expandActionView()
-            searchView.setQuery(mainViewModel.currentState.searchQuery, false)
-            searchView.requestFocus()
-
-        } else searchView.clearFocus()
-
-        menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener{
-
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                mainViewModel.handleSearchState(true)
-                return true
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                mainViewModel.handleSearchState(false)
-                return true
-            }
-
-        })
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                Log.e("MainFragment", "$query", )
-                mainViewModel.handleSearchQuery(query)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrBlank()){
-
-                    viewBinding.rvAlbum.scrollToPosition(0)
-
-                }
-
-                Log.e("MainFragment", "$newText", )
-
-                mainViewModel.handleSearchQuery(newText)
-
-                return true
-            }
-
-        })
-
-
-
-        return super.onCreateOptionsMenu(menu, inflater)
+        searchEditText.addTextChangedListener {
+            mainViewModel.handleSearchQuery(it.toString())
+        }
     }
+
+    override fun renderSearch(searchState: SearchState) {
+        if (!searchState.isOpened){
+            Log.e("MainScreen", "renderSearch: ", )
+            searchEditText.clearFocus()
+
+        }else {
+            searchEditText.requestFocus()
+        }
+    }
+
 
     override fun onItemClick(position: Int) {
         val albumItem = mainViewModel.currentState.albumList?.get(position)
 
-        //fix the transaction
         parentFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, AlbumDetailsFragment.newInstance(albumItem!!))
+            .replace(R.id.fragment_container, AlbumDetailsFragment.newInstance(albumItem!!))
+            .addToBackStack(null)
             .commit()
     }
+
+    override fun onKeyIme(keyCode: Int, event: KeyEvent?) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event!!.action == KeyEvent.ACTION_DOWN)
+
+            mainViewModel.handleSearchState(isOpened = false)
+
+        else if (keyCode == EditorInfo.IME_ACTION_GO) {
+            mainViewModel.handleSearchState(isOpened = false)
+        }
+    }
+
+
 
 }

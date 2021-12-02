@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.ForaSoftTest" parent="Theme.MaterialComponents.Light">
+    <style name="Theme.ForaSoftTest" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/dark_background</item>
+        <item name="colorPrimaryVariant">@color/purple_200</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/purple_200</item>
-        <item name="colorSecondaryVariant">@color/purple_200</item>
+        <item name="colorSecondary">@color/dark</item>
+        <item name="colorSecondaryVariant">@color/dark</item>
         <item name="android:textColorPrimary">@android:color/white</item>
 
 
@@ -14,6 +14,10 @@
 
     <style name="CustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+    <style name="ProgressBarStyle" parent="Theme.ForaSoftTest">
+        <item name="colorSecondary">@color/purple_200</item>
     </style>
 
 

@@ -6,24 +6,33 @@
     android:background="@color/dark_background"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+    <com.kizadev.myapplication.presentation.ui.CustomSearchView
+        android:id="@+id/custom_search_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_album"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/album_item"
         android:visibility="gone"
         android:layout_marginHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/custom_search_view"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:indicatorColor="@color/purple_200"
-        android:visibility="gone"
+        android:theme="@style/ProgressBarStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="92dp"

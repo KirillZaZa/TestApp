@@ -1,10 +1,7 @@
 package com.kizadev.myapplication.presentation.viewmodel.base
 
 import androidx.annotation.UiThread
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 
 abstract class BaseViewModel<T>(
     initialState: T
@@ -28,7 +25,20 @@ abstract class BaseViewModel<T>(
         owner: LifecycleOwner,
         onChanged: (newState: T) -> Unit
     ){
-        state.observe(owner, { onChanged(it) })
+        state.observe(owner, Observer{ onChanged(it) })
+    }
+
+    fun <D> observeSubState(
+        owner: LifecycleOwner,
+        transform: (T) -> D,
+        onChanged: (newState: D) -> Unit
+    ) {
+        state
+            .map(transform)
+            .distinctUntilChanged()
+            .observe(owner, Observer { onChanged(it!!) })
+
+
     }
 
 }

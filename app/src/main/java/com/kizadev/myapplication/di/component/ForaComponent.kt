@@ -15,7 +15,7 @@ interface ForaComponent {
 
     fun inject(mainFragment: MainFragment)
 
-    fun inject(fragment: AlbumDetailsFragment)
+    fun inject(detailFragment: AlbumDetailsFragment)
 
 
     @Component.Builder

@@ -24,6 +24,10 @@ class AlbumDetailsUseCaseImpl @Inject constructor(
             .subscribe({ albumDetailsDto->
                 val albumDetails = albumDetailsDto.mapToAlbumDetailsModel()
 
+                if (albumDetails.albumTracksList.isNullOrEmpty()){
+                    callback(ResponseResult.Failed("Failed"))
+                }
+
                 callback(ResponseResult.Success(albumDetails))
             },{ error->
 

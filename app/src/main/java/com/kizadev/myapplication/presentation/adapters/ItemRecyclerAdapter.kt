@@ -15,7 +15,7 @@ class ItemRecyclerAdapter<T>(
 ) : RecyclerView.Adapter<ViewHolder<T>>() {
 
     private lateinit var initList: MutableList<T>
-    private lateinit var onItemListener: OnItemClick
+    private var onItemListener: OnItemClick? = null
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(newList: MutableList<T>) {
@@ -54,9 +54,12 @@ class ItemRecyclerAdapter<T>(
 
         viewHolder.bind(item)
 
-        viewHolder.itemView.setOnClickListener {
-            onItemListener.onItemClick(position)
+        if (onItemListener != null){
+            viewHolder.itemView.setOnClickListener {
+                onItemListener!!.onItemClick(position)
+            }
         }
+
 
     }
 

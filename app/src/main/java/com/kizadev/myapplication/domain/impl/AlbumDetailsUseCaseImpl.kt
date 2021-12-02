@@ -17,19 +17,19 @@ class AlbumDetailsUseCaseImpl @Inject constructor(
 
     override fun getAlbumDetails(
         collectionId: String,
-        callback: (ResponseResult<AlbumDetailsModel>) -> Unit)
-    {
-      val disposable = repository.getAlbumDetails(collectionId)
+        callback: (ResponseResult<AlbumDetailsModel>) -> Unit
+    ) {
+        val disposable = repository.getAlbumDetails(collectionId)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ albumDetailsDto->
+            .subscribe({ albumDetailsDto ->
                 val albumDetails = albumDetailsDto.mapToAlbumDetailsModel()
 
-                if (albumDetails.albumTracksList.isNullOrEmpty()){
+                if (albumDetails.albumTracksList.isNullOrEmpty()) {
                     callback(ResponseResult.Failed("Failed"))
                 }
 
                 callback(ResponseResult.Success(albumDetails))
-            },{ error->
+            }, { error ->
 
                 callback(ResponseResult.Error(error))
 

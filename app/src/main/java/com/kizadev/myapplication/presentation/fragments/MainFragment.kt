@@ -7,6 +7,8 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kizadev.myapplication.R
@@ -187,6 +189,7 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
 
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, AlbumDetailsFragment.newInstance(albumItem!!))
+            .setTransition(TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
             .addToBackStack(null)
             .commit()
     }

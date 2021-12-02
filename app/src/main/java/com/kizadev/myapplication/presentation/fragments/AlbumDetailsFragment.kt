@@ -19,9 +19,11 @@ import com.kizadev.myapplication.application.foraComponent
 import com.kizadev.myapplication.data.local.model.AlbumItem
 import com.kizadev.myapplication.data.local.model.TrackItem
 import com.kizadev.myapplication.databinding.AlbumTrackFragmentBinding
+import com.kizadev.myapplication.extensions.changeUrlPhotoSize
 import com.kizadev.myapplication.presentation.activity.MainActivity
 import com.kizadev.myapplication.presentation.adapters.ItemRecyclerAdapter
 import com.kizadev.myapplication.presentation.adapters.ItemType
+import com.kizadev.myapplication.presentation.listeners.OnItemClick
 import com.kizadev.myapplication.presentation.viewholders.ItemOffsetDecoration
 import com.kizadev.myapplication.presentation.viewmodel.DetailsViewModelFactory
 import com.kizadev.myapplication.presentation.viewmodel.DetailsViewModelImpl
@@ -29,7 +31,7 @@ import com.kizadev.myapplication.presentation.viewmodel.state.DetailScreenState
 import com.kizadev.myapplication.presentation.viewmodel.state.ScreenState
 import javax.inject.Inject
 
-class AlbumDetailsFragment : Fragment(R.layout.album_track_fragment), IAlbumDetailsFragment {
+class AlbumDetailsFragment : Fragment(R.layout.album_track_fragment), IAlbumDetailsFragment, View.OnClickListener {
 
 
     private lateinit var viewBinding: AlbumTrackFragmentBinding
@@ -74,6 +76,8 @@ class AlbumDetailsFragment : Fragment(R.layout.album_track_fragment), IAlbumDeta
             albumItem = arguments!!.getParcelable(ALBUM_ITEM_KEY)!!
         }
 
+        detailViewModel.getAlbumDetails()
+
         detailViewModel.observeState(this, ::renderData)
 
     }
@@ -97,6 +101,7 @@ class AlbumDetailsFragment : Fragment(R.layout.album_track_fragment), IAlbumDeta
 
         adapter = ItemRecyclerAdapter(itemType = ItemType.TrackIem())
 
+        viewBinding.toolbar.setOnClickListener(this)
 
         with(viewBinding) {
             rvArtistSongs.layoutManager = LinearLayoutManager(requireContext())
@@ -110,22 +115,60 @@ class AlbumDetailsFragment : Fragment(R.layout.album_track_fragment), IAlbumDeta
 
         with(viewBinding){
             Glide.with(requireContext())
-                .load(state.albumItem!!.albumPhotoUrl.replace("100x100","600x600"))
+                .load(state.albumItem!!.albumPhotoUrl.changeUrlPhotoSize())
                 .error(ContextCompat.getDrawable(requireContext(), R.drawable.ic_name_album_icon))
                 .transition(DrawableTransitionOptions.withCrossFade(300))
                 .into(ivAlbumImage)
+
+            tvAlbumGenre.text = state.albumItem.albumGenre
+            tvAlbumCountOfTracks.text = state.albumItem.albumTrackCount
+            tvAlbumPrice.text = state.albumItem.albumPrice
+
+            toolbar.title = state.albumItem.albumName
+
         }
 
         when(state.screenState){
 
             ScreenState.SHOW_LIST -> {
-
-
+                Log.e("DetailsScreen", "renderData: ${state.trackList}", )
+                with(viewBinding) {
+                    progressBar.visibility = View.GONE
+                    rvArtistSongs.visibility = View.VISIBLE
+                    adapter.setData(newList = state.trackList!!)
+                }
 
             }
 
+            ScreenState.LOADING -> {
+                with(viewBinding){
+                    rvArtistSongs.visibility = View.GONE
+                    tvEmptyListInfo.visibility = View.GONE
+
+                    progressBar.visibility = View.VISIBLE
+                }
+            }
+
+            ScreenState.FAILED ->{
+                with(viewBinding){
+                    progressBar.visibility = View.GONE
+
+                    tvEmptyListInfo.visibility = View.VISIBLE
+                }
+            }
+
+
+            else -> return
         }
 
+    }
+
+    override fun onClick(v: View?) {
+        when(v!!.id){
+            viewBinding.toolbar.id -> {
+                requireActivity().onBackPressed()
+            }
+        }
     }
 
 

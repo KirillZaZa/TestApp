@@ -25,17 +25,18 @@ fun AlbumListDto.Result.mapToAlbumItem() = AlbumItem(
 )
 
 fun AlbumDetailsDto.Result.mapToTrackItem() = TrackItem(
-    trackName = this.trackName,
-    trackTime = this.trackTimeMillis.mapToMinutes(),
-    trackPrice = "${this.trackPrice}",
+    trackName = this.trackName ?: "Нет информации",
+    trackTime = this.trackTimeMillis?.mapToMinutes() ?: "Нет информации",
+    trackPrice = "${this.trackPrice ?: "Нет информации"}",
     trackPhotoUrl = this.artworkUrl100 ?: ""
 )
 
 fun AlbumDetailsDto.mapToAlbumDetailsModel(): AlbumDetailsModel {
-    val trackList = this.results?.map { it.mapToTrackItem() }
-        ?.sortedBy {
-            it.trackName
-        }
+    val trackList = this.results?.map {
+        it.mapToTrackItem()
+    }?.drop(1)
+
+
 
     return AlbumDetailsModel(
         albumTracksList = trackList,

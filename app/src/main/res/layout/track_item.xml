@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="4dp"
     android:background="@drawable/rounded_corners_shape"
-    android:paddingVertical="16dp"
+    android:paddingVertical="8dp"
     android:layout_height="wrap_content">
 
 
@@ -16,13 +16,13 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/album_card"
         app:cardCornerRadius="8dp"
+        android:backgroundTint="@color/purple_200"
         android:layout_marginStart="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_image_album_item"
-            android:background="@drawable/photo_202"
             android:layout_width="64dp"
             android:scaleType="centerCrop"
             android:layout_height="64dp"/>
@@ -46,6 +46,7 @@
         android:layout_marginTop="4dp"
         android:textSize="12sp"
         android:textColor="@color/light_grey"
+        app:layout_constraintBottom_toTopOf="@id/iv_song_price"
         android:text="@string/text_track_time"
         app:layout_constraintStart_toEndOf="@id/album_card"
         app:layout_constraintTop_toBottomOf="@id/tv_track_name"
@@ -58,6 +59,7 @@
         app:layout_constraintStart_toEndOf="@id/album_card"
         android:layout_marginStart="16dp"
         android:layout_width="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/album_card"
         app:layout_constraintTop_toBottomOf="@id/tv_track_time"
         android:layout_marginTop="4dp"
         android:background="@drawable/ic_price_album_icon"

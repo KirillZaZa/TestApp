@@ -55,6 +55,21 @@ class TrackViewHolder(
 
     override fun bind(model: TrackItem) {
 
+        val context = itemView.context
+
+        with(viewBinding){
+            tvTrackName.text = model.trackName
+            tvTrackPrice.text = model.trackPrice
+            tvTrackTime.text = model.trackTime
+
+            Glide.with(context)
+                .load(model.trackPhotoUrl)
+                .error(ContextCompat.getDrawable(context, R.drawable.ic_name_album_icon))
+                .transition(DrawableTransitionOptions.withCrossFade(300))
+                .into(ivImageAlbumItem)
+
+        }
+
     }
 
 

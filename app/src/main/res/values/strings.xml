@@ -13,6 +13,7 @@
 
 
     <string name="search_hint">Название альбома</string>
+    <string name="details_empty_list_hint">У данного альбома\nнет песен</string>
 
     <string name="search_failed_hint">Таких альбомов нет</string>
     <string name="search_bad_request">Ошибка при запросе\nПопробуйте снова</string>

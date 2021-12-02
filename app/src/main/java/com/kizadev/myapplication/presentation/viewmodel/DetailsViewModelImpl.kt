@@ -1,5 +1,6 @@
 package com.kizadev.myapplication.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kizadev.myapplication.data.local.model.AlbumItem
@@ -20,20 +21,18 @@ class DetailsViewModelImpl(
 ) : BaseViewModel<DetailScreenState>(DetailScreenState()), DetailsViewModel {
 
 
-    init {
-
-        getAlbumDetails()
-
-    }
 
     override fun getAlbumDetails() {
+
         updateState {
             it.copy(
                 albumItem = albumItem,
+                screenState = ScreenState.LOADING
             )
         }
 
         albumDetailsUseCaseImpl.getAlbumDetails(albumItem.albumId) { response ->
+            Log.e("ViewModel", "getAlbumDetails: $response", )
             when (response) {
                 is ResponseResult.Success -> {
 

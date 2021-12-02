@@ -27,7 +27,9 @@ class AlbumListUseCaseImpl @Inject constructor(
                 val albumListModel = albumDto.mapToAlbumListModel()
 
                 if (albumListModel.albumList.isNullOrEmpty()) {
-                    callback(ResponseResult.Error(NullPointerException()))
+
+                    callback(ResponseResult.Failed("Таких альбомов не найдено"))
+
                 } else callback(ResponseResult.Success(albumListModel))
 
 

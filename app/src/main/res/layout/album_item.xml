@@ -12,6 +12,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/album_card"
+        app:cardBackgroundColor="@color/purple_200"
         app:cardCornerRadius="8dp"
         android:layout_marginStart="16dp"
         android:layout_width="wrap_content"
@@ -19,7 +20,6 @@
 
         <ImageView
             android:id="@+id/iv_image_album_item"
-            android:background="@drawable/photo_202"
             android:layout_width="64dp"
             android:scaleType="centerCrop"
             android:layout_height="64dp"/>

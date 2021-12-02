@@ -11,9 +11,15 @@ import com.kizadev.myapplication.extensions.mapToMinutes
 
 fun AlbumListDto.Result.mapToAlbumItem() = AlbumItem(
     albumId = "${this.collectionId}",
-    albumGenre = this.primaryGenreName,
+    albumGenre = buildString {
+        append("Жанр: ")
+        append(primaryGenreName)
+    },
     albumName = this.collectionName,
-    albumTrackCount = "${this.trackCount}",
+    albumTrackCount = buildString {
+        append("Количество треков: ")
+        append(trackCount)
+    },
     albumPrice = "${this.collectionPrice}",
     albumPhotoUrl = this.artworkUrl100 ?: ""
 )

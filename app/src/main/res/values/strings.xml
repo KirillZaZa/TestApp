@@ -12,6 +12,12 @@
     <string name="text_track_price">15 руб</string>
 
 
+    <string name="search_hint">Название альбома</string>
+
+    <string name="search_failed_hint">Таких альбомов нет</string>
+    <string name="search_bad_request">Ошибка при запросе\nПопробуйте снова</string>
+
+
     <string name="image_view_description">some description</string>
     <string name="title_menu_search">Поиск альбома</string>
 </resources>

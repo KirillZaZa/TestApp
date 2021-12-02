@@ -6,4 +6,6 @@ sealed class ResponseResult<T>{
 
     data class Error<T>(val throwable: Throwable): ResponseResult<T>()
 
+    data class Failed<T>(val msg: String): ResponseResult<T>()
+
 }

@@ -27,7 +27,6 @@ class ItemRecyclerAdapter<T>(
         when (itemType) {
             is ItemType.AlbumItem -> {
 
-                Log.e("Adapter", "onCreateViewHolder: ", )
                 val view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.album_item, viewGroup, false)
 

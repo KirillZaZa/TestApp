@@ -166,7 +166,7 @@ class AlbumDetailsFragment : Fragment(R.layout.album_track_fragment), IAlbumDeta
     override fun onClick(v: View?) {
         when(v!!.id){
             viewBinding.toolbar.id -> {
-                requireActivity().onBackPressed()
+                childFragmentManager.popBackStack()
             }
         }
     }

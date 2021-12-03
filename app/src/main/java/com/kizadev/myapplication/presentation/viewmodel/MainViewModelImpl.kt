@@ -33,7 +33,6 @@ class MainViewModelImpl @Inject constructor(
         updateState { it.copy(
             isSearchOpened = true
         ) }
-        Log.e("ViewModel", "$searchQuery", )
 
         if (!searchQuery.isNullOrBlank()) {
 

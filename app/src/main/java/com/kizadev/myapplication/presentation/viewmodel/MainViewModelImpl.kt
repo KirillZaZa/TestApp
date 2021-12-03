@@ -11,12 +11,10 @@ import com.kizadev.myapplication.presentation.viewmodel.state.MainScreenState
 import com.kizadev.myapplication.presentation.viewmodel.state.ScreenState
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.BackpressureStrategy
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.lang.IllegalArgumentException
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -40,6 +38,7 @@ class MainViewModelImpl @Inject constructor(
 
             searchSubject
                 .onNext(query)
+
 
             updateState {
                 it.copy(
@@ -69,13 +68,12 @@ class MainViewModelImpl @Inject constructor(
 
 
         val disposable = searchSubject
-            .debounce(300, TimeUnit.MILLISECONDS)
+            .debounce(600, TimeUnit.MILLISECONDS)
             .filter { query ->
                 query.isNotBlank()
             }
             .distinctUntilChanged()
             .subscribe { newQuery ->
-
                 albumListUseCaseImpl.getAlbums(newQuery!!) { response ->
 
                     when (response) {

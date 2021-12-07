@@ -14,7 +14,6 @@ abstract class BaseViewModel<T>(
     val currentState
         get() = state.value!!
 
-
     @UiThread
     protected inline fun updateState(update: (currentState: T) -> T) {
         val updatedState: T = update(currentState)
@@ -24,8 +23,8 @@ abstract class BaseViewModel<T>(
     fun observeState(
         owner: LifecycleOwner,
         onChanged: (newState: T) -> Unit
-    ){
-        state.observe(owner, Observer{ onChanged(it) })
+    ) {
+        state.observe(owner, Observer { onChanged(it) })
     }
 
     fun <D> observeSubState(
@@ -37,8 +36,5 @@ abstract class BaseViewModel<T>(
             .map(transform)
             .distinctUntilChanged()
             .observe(owner, Observer { onChanged(it!!) })
-
-
     }
-
 }

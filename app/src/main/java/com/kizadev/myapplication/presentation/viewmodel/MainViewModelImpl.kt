@@ -24,6 +24,7 @@ class MainViewModelImpl @Inject constructor(
 ) : BaseViewModel<MainScreenState>(MainScreenState()), MainViewModel {
 
     private val searchSubject = PublishSubject.create<String>()
+    private val searchFlowable = searchSubject.toFlowable(BackpressureStrategy.LATEST)
 
     override fun handleSearchQuery(searchQuery: String?) {
 
@@ -58,15 +59,15 @@ class MainViewModelImpl @Inject constructor(
             compositeDisposable.clear()
         }
 
-        val disposable = searchSubject
+        val disposable = searchFlowable
             .debounce(600, TimeUnit.MILLISECONDS)
-            .toFlowable(BackpressureStrategy.LATEST)
             .subscribeOn(Schedulers.io())
             .filter {
                 it.isNotBlank()
             }
             .distinctUntilChanged()
             .switchMap { albumListUseCaseImpl.getAlbums(it) }
+            .delay(200, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
                 when (response) {

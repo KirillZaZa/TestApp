@@ -6,13 +6,10 @@ import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
 
-
 @Module(includes = [NetworkModule::class, DisposableModule::class])
-abstract class MainModule{
-
+abstract class MainModule {
 
     @Singleton
     @Binds
     abstract fun context(application: Application): Context
-
 }

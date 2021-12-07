@@ -23,10 +23,9 @@ class ItemRecyclerAdapter<T>(
         notifyDataSetChanged()
     }
 
-    fun setOnItemListener(listener: OnItemClick){
+    fun setOnItemListener(listener: OnItemClick) {
         onItemListener = listener
     }
-
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder<T> {
         when (itemType) {
@@ -44,7 +43,6 @@ class ItemRecyclerAdapter<T>(
                     .inflate(R.layout.track_item, viewGroup, false)
 
                 return TrackViewHolder(view) as ViewHolder<T>
-
             }
         }
     }
@@ -54,18 +52,14 @@ class ItemRecyclerAdapter<T>(
 
         viewHolder.bind(item)
 
-        if (onItemListener != null){
+        if (onItemListener != null) {
             viewHolder.itemView.setOnClickListener {
                 onItemListener!!.onItemClick(position)
             }
         }
-
-
     }
 
     override fun getItemCount(): Int {
         return initList.size
     }
-
-
 }

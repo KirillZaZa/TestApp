@@ -19,6 +19,7 @@
         android:id="@+id/rv_album"
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/album_item"
+        android:splitMotionEvents="false"
         android:visibility="gone"
         android:layout_marginHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"

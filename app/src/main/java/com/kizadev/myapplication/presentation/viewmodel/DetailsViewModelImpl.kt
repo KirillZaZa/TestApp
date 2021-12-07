@@ -1,6 +1,5 @@
 package com.kizadev.myapplication.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kizadev.myapplication.data.local.model.AlbumItem
@@ -20,8 +19,6 @@ class DetailsViewModelImpl(
     private val albumDetailsUseCaseImpl: AlbumDetailsUseCaseImpl
 ) : BaseViewModel<DetailScreenState>(DetailScreenState()), DetailsViewModel {
 
-
-
     override fun getAlbumDetails() {
 
         updateState {
@@ -32,7 +29,6 @@ class DetailsViewModelImpl(
         }
 
         albumDetailsUseCaseImpl.getAlbumDetails(albumItem.albumId) { response ->
-            Log.e("ViewModel", "getAlbumDetails: $response", )
             when (response) {
                 is ResponseResult.Success -> {
 
@@ -42,7 +38,6 @@ class DetailsViewModelImpl(
                             screenState = ScreenState.SHOW_LIST
                         )
                     }
-
                 }
 
                 is ResponseResult.Error -> {
@@ -52,9 +47,7 @@ class DetailsViewModelImpl(
                             screenState = ScreenState.ERROR
                         )
                     }
-
                 }
-
 
                 is ResponseResult.Failed -> {
 
@@ -63,21 +56,16 @@ class DetailsViewModelImpl(
                             screenState = ScreenState.FAILED
                         )
                     }
-
                 }
-
             }
         }
     }
-
-
 }
 
 class DetailsViewModelFactory @AssistedInject constructor(
     @Assisted("albumItem") private val albumItem: AlbumItem,
     private val albumDetailsUseCaseImpl: AlbumDetailsUseCaseImpl
 ) : ViewModelProvider.Factory {
-
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DetailsViewModelImpl::class.java)) {
@@ -94,5 +82,4 @@ class DetailsViewModelFactory @AssistedInject constructor(
             @Assisted("albumItem") albumItem: AlbumItem
         ): DetailsViewModelFactory
     }
-
 }

@@ -1,9 +1,7 @@
 package com.kizadev.myapplication.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kizadev.myapplication.data.local.model.AlbumItem
 import com.kizadev.myapplication.domain.impl.AlbumListUseCaseImpl
 import com.kizadev.myapplication.domain.result_wrapper.ResponseResult
 import com.kizadev.myapplication.presentation.viewmodel.base.BaseViewModel
@@ -12,7 +10,9 @@ import com.kizadev.myapplication.presentation.viewmodel.state.ScreenState
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.BackpressureStrategy
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
@@ -25,28 +25,23 @@ class MainViewModelImpl @Inject constructor(
 
     private val searchSubject = PublishSubject.create<String>()
 
-
     override fun handleSearchQuery(searchQuery: String?) {
-
-        updateState { it.copy(
-            isSearchOpened = true
-        ) }
 
         if (!searchQuery.isNullOrBlank()) {
 
             val query = searchQuery.trimEnd()
 
-            searchSubject
-                .onNext(query)
+            if (query != currentState.searchQuery) {
+                searchSubject.onNext(query)
 
-
-            updateState {
-                it.copy(
-                    searchQuery = searchQuery,
-                    screenState = ScreenState.LOADING
-                )
+                updateState {
+                    it.copy(
+                        isSearchOpened = true,
+                        searchQuery = query,
+                        screenState = ScreenState.LOADING
+                    )
+                }
             }
-
         } else {
 
             updateState {
@@ -56,57 +51,44 @@ class MainViewModelImpl @Inject constructor(
                     screenState =
                     if (currentState.albumList != null && currentState.albumList!!.isNotEmpty())
                         ScreenState.SHOW_LIST
-
                     else ScreenState.EMPTY_LIST
                 )
-
             }
 
             compositeDisposable.clear()
-
         }
-
 
         val disposable = searchSubject
             .debounce(600, TimeUnit.MILLISECONDS)
-            .filter { query ->
-                query.isNotBlank()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .subscribeOn(Schedulers.io())
+            .filter {
+                it.isNotBlank()
             }
             .distinctUntilChanged()
-            .subscribe { newQuery ->
-                albumListUseCaseImpl.getAlbums(newQuery!!) { response ->
-
-                    when (response) {
-
-                        is ResponseResult.Success -> {
-                            Log.e("ViewModelResult", "${response.result.albumList}", )
-                            updateState {
-                                it.copy(
-                                    albumList = response.result.albumList as MutableList<AlbumItem>,
-                                    screenState = ScreenState.SHOW_LIST
-                                )
-                            }
-                        }
-
-
-                        is ResponseResult.Error -> updateState {
-                            it.copy(
-                                screenState = ScreenState.ERROR,
-                                albumList = mutableListOf()
-                            )
-                        }
-
-                        is ResponseResult.Failed -> updateState {
-                            it.copy(
-                                screenState = ScreenState.FAILED,
-                                albumList = mutableListOf()
-                            )
-                        }
-
+            .switchMap { albumListUseCaseImpl.getAlbums(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ response ->
+                when (response) {
+                    is ResponseResult.Success -> updateState {
+                        it.copy(
+                            screenState = ScreenState.SHOW_LIST,
+                            albumList = response.result.albumList
+                        )
+                    }
+                    is ResponseResult.Failed -> updateState {
+                        it.copy(
+                            screenState = ScreenState.FAILED,
+                            albumList = null
+                        )
+                    }
+                    else -> {
+                        return@subscribe
                     }
                 }
-
-            }
+            }, {
+                updateState { it.copy(screenState = ScreenState.ERROR) }
+            })
 
         compositeDisposable.add(disposable)
     }
@@ -119,7 +101,11 @@ class MainViewModelImpl @Inject constructor(
         }
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+        searchSubject.onComplete()
+    }
 }
 
 class MainViewModelFactory @AssistedInject constructor(
@@ -141,5 +127,4 @@ class MainViewModelFactory @AssistedInject constructor(
     interface Factory {
         fun create(): MainViewModelFactory
     }
-
 }

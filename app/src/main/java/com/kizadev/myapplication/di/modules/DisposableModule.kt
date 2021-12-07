@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
 
-
 @Module
 class DisposableModule {
 
@@ -12,12 +11,11 @@ class DisposableModule {
     private var compositeDisposable: CompositeDisposable? = null
 
     @Provides
-    fun provideCompositeDisposable(): CompositeDisposable{
-        return compositeDisposable ?: synchronized(this){
+    fun provideCompositeDisposable(): CompositeDisposable {
+        return compositeDisposable ?: synchronized(this) {
             val comp = CompositeDisposable()
             compositeDisposable = comp
             comp
         }
     }
-
 }

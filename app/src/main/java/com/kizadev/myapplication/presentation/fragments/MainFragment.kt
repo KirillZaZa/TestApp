@@ -3,11 +3,13 @@ package com.kizadev.myapplication.presentation.fragments
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,23 +32,16 @@ import javax.inject.Inject
 
 class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyImeChange {
 
-
     private lateinit var searchEditText: SearchEditText
 
     private val mainViewModel: MainViewModelImpl by viewModels {
         mainViewModelFactory.create()
     }
 
-
-
     private lateinit var viewBinding: MainFragmentBinding
-
-
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory.Factory
-
-
 
     private lateinit var adapter: ItemRecyclerAdapter<AlbumItem>
 
@@ -55,23 +50,10 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
         super.onAttach(context)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-
-
-        mainViewModel.observeState(this, ::renderData)
-
-        mainViewModel.observeSubState(
-            this,
-            MainScreenState::toSearchState,
-            ::renderSearch
-        )
-
-
     }
 
     override fun onCreateView(
@@ -80,17 +62,24 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
         savedInstanceState: Bundle?
     ): View {
 
+        Log.e("MainFragment", "onCreateView $mainViewModel")
+
         viewBinding = MainFragmentBinding.inflate(inflater, container, false)
+
+        mainViewModel.observeState(viewLifecycleOwner, ::renderData)
+
+        mainViewModel.observeSubState(
+            viewLifecycleOwner,
+            MainScreenState::toSearchState,
+            ::renderSearch
+        )
 
         setupSearch()
 
         initViews()
 
-
-
         return viewBinding.root
     }
-
 
     override fun initViews() {
 
@@ -98,14 +87,11 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
 
         adapter.setOnItemListener(this)
 
-
         with(viewBinding) {
             rvAlbum.layoutManager = LinearLayoutManager(requireContext())
             rvAlbum.addItemDecoration(ItemOffsetDecoration())
             rvAlbum.adapter = adapter
         }
-
-
     }
 
     override fun renderData(screenState: MainScreenState) {
@@ -147,7 +133,6 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
 
                     tvEmptyListInfo.visibility = View.VISIBLE
                     tvEmptyListInfo.text = getString(R.string.text_empty_list_hint)
-
                 }
             }
 
@@ -161,7 +146,6 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
                 }
             }
         }
-
     }
 
     override fun setupSearch() {
@@ -169,20 +153,18 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
         searchEditText.setOnKeyImeChangeListener(this)
 
         searchEditText.addTextChangedListener {
+            it.toString().trim()
             mainViewModel.handleSearchQuery(it.toString())
         }
     }
 
     override fun renderSearch(searchState: SearchState) {
-        if (!searchState.isOpened){
-            Log.e("MainScreen", "renderSearch: ", )
+        if (!searchState.isOpened) {
             searchEditText.clearFocus()
-
-        }else {
+        } else {
             searchEditText.requestFocus()
         }
     }
-
 
     override fun onItemClick(position: Int) {
         val albumItem = mainViewModel.currentState.albumList?.get(position)
@@ -198,12 +180,8 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
         if (keyCode == KeyEvent.KEYCODE_BACK && event!!.action == KeyEvent.ACTION_DOWN)
 
             mainViewModel.handleSearchState(isOpened = false)
-
         else if (keyCode == EditorInfo.IME_ACTION_GO) {
             mainViewModel.handleSearchState(isOpened = false)
         }
     }
-
-
-
 }

@@ -5,5 +5,4 @@ interface MainViewModel {
     fun handleSearchQuery(searchQuery: String?)
 
     fun handleSearchState(isOpened: Boolean)
-
 }

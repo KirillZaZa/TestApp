@@ -9,7 +9,6 @@ class ForaApplication : Application() {
 
     lateinit var foraComponent: ForaComponent
 
-
     override fun onCreate() {
         super.onCreate()
 
@@ -17,15 +16,11 @@ class ForaApplication : Application() {
             .builder()
             .application(this)
             .build()
-
     }
-
-
 }
 
 val Context.foraComponent: ForaComponent
-    get() = when(this){
+    get() = when (this) {
         is ForaApplication -> foraComponent
         else -> this.applicationContext.foraComponent
     }
-

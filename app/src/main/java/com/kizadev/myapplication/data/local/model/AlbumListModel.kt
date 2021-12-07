@@ -4,9 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 data class AlbumListModel(
-    val albumList: List<AlbumItem>?
+    val albumList: MutableList<AlbumItem>?
 )
-
 
 @Parcelize
 data class AlbumItem(
@@ -16,4 +15,4 @@ data class AlbumItem(
     val albumGenre: String,
     val albumPhotoUrl: String,
     val albumPrice: String
-): Parcelable
+) : Parcelable

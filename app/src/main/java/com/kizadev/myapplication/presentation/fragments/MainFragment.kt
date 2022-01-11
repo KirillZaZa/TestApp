@@ -15,8 +15,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kizadev.myapplication.R
 import com.kizadev.myapplication.application.foraComponent
-import com.kizadev.myapplication.data.local.model.AlbumItem
 import com.kizadev.myapplication.databinding.MainFragmentBinding
+import com.kizadev.myapplication.domain.model.AlbumItem
 import com.kizadev.myapplication.presentation.adapters.ItemRecyclerAdapter
 import com.kizadev.myapplication.presentation.adapters.ItemType
 import com.kizadev.myapplication.presentation.listeners.OnItemClick
@@ -52,8 +52,6 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -61,8 +59,6 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        Log.e("MainFragment", "onCreateView $mainViewModel")
 
         viewBinding = MainFragmentBinding.inflate(inflater, container, false)
 
@@ -167,21 +163,21 @@ class MainFragment : Fragment(), IMainFragment, OnItemClick, SearchEditText.KeyI
     }
 
     override fun onItemClick(position: Int) {
-        val albumItem = mainViewModel.currentState.albumList?.get(position)
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, AlbumDetailsFragment.newInstance(albumItem!!))
-            .setTransition(TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
-            .addToBackStack(null)
-            .commit()
+        mainViewModel.currentState.albumList?.get(position)?.let { albumItem ->
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AlbumDetailsFragment.newInstance(albumItem))
+                .setTransition(TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun onKeyIme(keyCode: Int, event: KeyEvent?) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event!!.action == KeyEvent.ACTION_DOWN)
-
             mainViewModel.handleSearchState(isOpened = false)
-        else if (keyCode == EditorInfo.IME_ACTION_GO) {
-            mainViewModel.handleSearchState(isOpened = false)
+        else if (keyCode == EditorInfo.IME_ACTION_SEARCH) {
+            Log.e("MainActivity", "onKeyIme: $keyCode, ${searchEditText.text}")
+            mainViewModel.handleSearchQuery(searchEditText.text.toString())
         }
     }
 }

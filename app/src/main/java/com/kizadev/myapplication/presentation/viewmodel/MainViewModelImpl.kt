@@ -2,14 +2,13 @@ package com.kizadev.myapplication.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kizadev.myapplication.domain.impl.AlbumListUseCaseImpl
 import com.kizadev.myapplication.domain.result_wrapper.ResponseResult
+import com.kizadev.myapplication.domain.usecase.GetListFromNetworkUseCase
 import com.kizadev.myapplication.presentation.viewmodel.base.BaseViewModel
 import com.kizadev.myapplication.presentation.viewmodel.state.MainScreenState
 import com.kizadev.myapplication.presentation.viewmodel.state.ScreenState
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -19,12 +18,15 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainViewModelImpl @Inject constructor(
-    private val albumListUseCaseImpl: AlbumListUseCaseImpl,
+    private val getListFromNetworkUseCase: GetListFromNetworkUseCase,
     private val compositeDisposable: CompositeDisposable
 ) : BaseViewModel<MainScreenState>(MainScreenState()), MainViewModel {
 
     private val searchSubject = PublishSubject.create<String>()
-    private val searchFlowable = searchSubject.toFlowable(BackpressureStrategy.LATEST)
+
+    init {
+        subscribeSearch()
+    }
 
     override fun handleSearchQuery(searchQuery: String?) {
 
@@ -46,7 +48,6 @@ class MainViewModelImpl @Inject constructor(
         } else {
 
             updateState {
-
                 it.copy(
                     searchQuery = searchQuery,
                     screenState =
@@ -55,18 +56,15 @@ class MainViewModelImpl @Inject constructor(
                     else ScreenState.EMPTY_LIST
                 )
             }
-
-            compositeDisposable.clear()
         }
+    }
 
-        val disposable = searchFlowable
+    private fun subscribeSearch() {
+        val disposable = searchSubject
             .debounce(600, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
-            .filter {
-                it.isNotBlank()
-            }
             .distinctUntilChanged()
-            .switchMap { albumListUseCaseImpl.getAlbums(it) }
+            .switchMap { getListFromNetworkUseCase.execute(it).toObservable() }
             .delay(200, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
@@ -110,14 +108,14 @@ class MainViewModelImpl @Inject constructor(
 }
 
 class MainViewModelFactory @AssistedInject constructor(
-    private val albumListUseCaseImpl: AlbumListUseCaseImpl,
+    private val getListFromNetworkUseCase: GetListFromNetworkUseCase,
     private val compositeDisposable: CompositeDisposable
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModelImpl::class.java)) {
             return MainViewModelImpl(
-                albumListUseCaseImpl,
+                getListFromNetworkUseCase,
                 compositeDisposable
             ) as T
         }

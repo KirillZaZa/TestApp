@@ -3,8 +3,7 @@ package com.kizadev.myapplication.presentation.fragments
 import com.kizadev.myapplication.presentation.viewmodel.state.MainScreenState
 import com.kizadev.myapplication.presentation.viewmodel.state.SearchState
 
-interface IMainFragment{
-
+interface IMainFragment {
 
     fun initViews()
 
@@ -13,6 +12,4 @@ interface IMainFragment{
     fun renderSearch(searchState: SearchState)
 
     fun renderData(screenState: MainScreenState)
-
-
 }

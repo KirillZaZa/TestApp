@@ -1,6 +1,5 @@
-package com.kizadev.myapplication.presentation.viewmodel.state
+package com.kizadev.myapplication.presentation.viewmodel.state // ktlint-disable filename
 
-
-enum class ScreenState{
+enum class ScreenState {
     LOADING, SHOW_LIST, EMPTY_LIST, ERROR, FAILED
 }

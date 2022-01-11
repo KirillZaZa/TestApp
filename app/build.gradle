@@ -41,6 +41,10 @@ dependencies {
 
     def daggerVer = 2.39
 
+    implementation project(path: ':domain')
+    implementation project(path: ':data')
+
+
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"

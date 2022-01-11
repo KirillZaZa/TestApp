@@ -1,8 +1,8 @@
 package com.kizadev.myapplication.di.modules
 
 import android.content.Context
-import com.kizadev.myapplication.data.network.api.ApiConfig
-import com.kizadev.myapplication.data.network.api.ItunesService
+import com.kizadev.myapplication.data.ApiConfig
+import com.kizadev.myapplication.data.ItunesService
 import dagger.Module
 import dagger.Provides
 import io.reactivex.schedulers.Schedulers

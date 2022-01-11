@@ -10,42 +10,33 @@ class SearchEditText @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttrs: Int = 0
-): AppCompatEditText(context, attrs, defStyleAttrs) {
-
+) : AppCompatEditText(context, attrs, defStyleAttrs) {
 
     private lateinit var keyImeChangeListener: KeyImeChange
     var isOpened = true
 
-
-
-
-    fun setOnKeyImeChangeListener(listener: KeyImeChange){
+    fun setOnKeyImeChangeListener(listener: KeyImeChange) {
         keyImeChangeListener = listener
     }
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
 
-        if(keyCode == KeyEvent.KEYCODE_BACK && event!!.action == KeyEvent.ACTION_DOWN){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event!!.action == KeyEvent.ACTION_DOWN) {
             keyImeChangeListener.onKeyIme(keyCode, event)
             isOpened = !isOpened
         }
-
 
         return super.onKeyPreIme(keyCode, event)
     }
 
     override fun onEditorAction(actionCode: Int) {
-        if(actionCode == EditorInfo.IME_ACTION_GO){
-            keyImeChangeListener.onKeyIme(actionCode, null)
+        when (actionCode) {
+            EditorInfo.IME_ACTION_SEARCH ->
+                keyImeChangeListener.onKeyIme(actionCode, null)
         }
     }
 
-
-
-
-    interface KeyImeChange{
+    interface KeyImeChange {
         fun onKeyIme(keyCode: Int, event: KeyEvent?)
     }
-
-
 }

@@ -3,18 +3,16 @@ package com.kizadev.myapplication.presentation.viewholders
 import android.graphics.Rect
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.size
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.kizadev.myapplication.R
-import com.kizadev.myapplication.data.local.model.AlbumItem
-import com.kizadev.myapplication.data.local.model.TrackItem
+import com.kizadev.myapplication.domain.model.AlbumItem
+import com.kizadev.myapplication.domain.model.TrackItem
 import com.kizadev.myapplication.databinding.AlbumItemBinding
 import com.kizadev.myapplication.databinding.TrackItemBinding
 import com.kizadev.myapplication.extensions.dpToPx
-import com.kizadev.myapplication.presentation.listeners.OnItemClick
 
 class AlbumViewHolder(
     itemView: View,
@@ -22,10 +20,9 @@ class AlbumViewHolder(
 
     private val viewBinding by viewBinding(AlbumItemBinding::bind)
 
-
     override fun bind(model: AlbumItem) {
         val context = itemView.context
-        with(viewBinding){
+        with(viewBinding) {
 
             tvAlbumName.text = model.albumName
             tvCountOfTracks.text = model.albumTrackCount
@@ -36,20 +33,13 @@ class AlbumViewHolder(
                 .error(ContextCompat.getDrawable(context, R.drawable.ic_name_album_icon))
                 .transition(DrawableTransitionOptions.withCrossFade(300))
                 .into(ivImageAlbumItem)
-
         }
-
     }
-
-
-
 }
 
 class TrackViewHolder(
     itemView: View,
-
-) : ViewHolder<TrackItem>(itemView){
-
+) : ViewHolder<TrackItem>(itemView) {
 
     private val viewBinding by viewBinding(TrackItemBinding::bind)
 
@@ -57,7 +47,7 @@ class TrackViewHolder(
 
         val context = itemView.context
 
-        with(viewBinding){
+        with(viewBinding) {
             tvTrackName.text = model.trackName
             tvTrackPrice.text = model.trackPrice
             tvTrackTime.text = model.trackTime
@@ -67,15 +57,11 @@ class TrackViewHolder(
                 .error(ContextCompat.getDrawable(context, R.drawable.ic_name_album_icon))
                 .transition(DrawableTransitionOptions.withCrossFade(300))
                 .into(ivImageAlbumItem)
-
         }
-
     }
-
-
 }
 
-class ItemOffsetDecoration: RecyclerView.ItemDecoration(){
+class ItemOffsetDecoration : RecyclerView.ItemDecoration() {
 
     private val offsetY = 8
     private val offsetYLast = 24
@@ -96,14 +82,11 @@ class ItemOffsetDecoration: RecyclerView.ItemDecoration(){
 
                 outRect.top = view.context.dpToPx(offsetY)
                 outRect.bottom = view.context.dpToPx(offsetYLast)
-
             }
 
             else -> {
                 outRect.top = view.context.dpToPx(offsetY)
             }
-
-
         }
     }
 }

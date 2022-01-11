@@ -1,7 +1,6 @@
 package com.kizadev.myapplication.presentation.viewmodel.state
 
-import com.kizadev.myapplication.data.local.model.AlbumItem
-
+import com.kizadev.myapplication.domain.model.AlbumItem
 
 data class MainScreenState(
     val screenState: ScreenState = ScreenState.EMPTY_LIST,
@@ -9,3 +8,6 @@ data class MainScreenState(
     val searchQuery: String? = null,
     val isSearchOpened: Boolean = false
 )
+
+
+

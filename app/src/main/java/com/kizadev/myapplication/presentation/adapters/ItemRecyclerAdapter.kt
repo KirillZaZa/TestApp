@@ -37,7 +37,7 @@ class ItemRecyclerAdapter<T>(
                 return AlbumViewHolder(view) as ViewHolder<T>
             }
 
-            is ItemType.TrackIem -> {
+            is ItemType.TrackItem -> {
 
                 val view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.track_item, viewGroup, false)

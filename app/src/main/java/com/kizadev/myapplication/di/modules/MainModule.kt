@@ -6,7 +6,7 @@ import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
 
-@Module(includes = [NetworkModule::class, DisposableModule::class])
+@Module(includes = [NetworkModule::class, DisposableModule::class, BindModule::class])
 abstract class MainModule {
 
     @Singleton

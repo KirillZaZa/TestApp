@@ -1,71 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="8dp"
     android:background="@drawable/rounded_corners_shape"
     android:elevation="4dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingVertical="8dp">
 
     <androidx.cardview.widget.CardView
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/album_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         app:cardBackgroundColor="@color/purple_200"
         app:cardCornerRadius="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/iv_image_album_item"
             android:layout_width="64dp"
-            android:scaleType="centerCrop"
-            android:layout_height="64dp"/>
-        
+            android:layout_height="64dp"
+            android:scaleType="centerCrop" />
+
     </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/tv_album_name"
-        app:layout_constraintStart_toEndOf="@id/album_card"
-        android:layout_width="0dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_count_of_tracks"
         style="@style/ItemAlbumTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:text="@string/text_name_of_album"
+        app:layout_constraintBottom_toTopOf="@id/tv_count_of_tracks"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/album_card"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintStart_toEndOf="@id/album_card"
+        app:layout_constraintTop_toTopOf="@id/album_card" />
 
 
     <TextView
         android:id="@+id/tv_count_of_tracks"
         style="@style/ItemAlbumTextStyle"
-        android:layout_marginTop="2dp"
-        android:textSize="12sp"
-        android:textColor="@color/purple_200"
-        android:text="@string/text_count_of_tracks"
-        app:layout_constraintBottom_toTopOf="@id/tv_album_genre"
-        app:layout_constraintStart_toEndOf="@id/album_card"
-        app:layout_constraintTop_toBottomOf="@id/tv_album_name"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/text_count_of_tracks"
+        android:textColor="@color/purple_200"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_album_genre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/album_card"
+        app:layout_constraintTop_toBottomOf="@id/tv_album_name" />
 
     <TextView
         android:id="@+id/tv_album_genre"
-        app:layout_constraintTop_toBottomOf="@id/tv_count_of_tracks"
-        app:layout_constraintStart_toEndOf="@id/album_card"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/album_card"
-        android:layout_marginTop="2dp"
-        android:textColor="@color/light_grey"
-        android:text="@string/text_album_genre"
         style="@style/ItemAlbumTextStyle"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/text_album_genre"
+        android:textColor="@color/light_grey"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/album_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/album_card"
+        app:layout_constraintTop_toBottomOf="@id/tv_count_of_tracks" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

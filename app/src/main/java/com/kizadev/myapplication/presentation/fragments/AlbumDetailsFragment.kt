@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.kizadev.myapplication.R
 import com.kizadev.myapplication.application.foraComponent
-import com.kizadev.myapplication.data.local.model.AlbumItem
-import com.kizadev.myapplication.data.local.model.TrackItem
+import com.kizadev.myapplication.domain.model.AlbumItem
+import com.kizadev.myapplication.domain.model.TrackItem
 import com.kizadev.myapplication.databinding.AlbumTrackFragmentBinding
 import com.kizadev.myapplication.extensions.changeUrlPhotoSize
 import com.kizadev.myapplication.presentation.adapters.ItemRecyclerAdapter
@@ -57,7 +57,7 @@ class AlbumDetailsFragment :
         fun newInstance(albumItem: AlbumItem): AlbumDetailsFragment {
 
             val args = Bundle()
-            args.putParcelable(ALBUM_ITEM_KEY, albumItem)
+            args.putSerializable(ALBUM_ITEM_KEY, albumItem)
 
             val fragment = AlbumDetailsFragment()
             fragment.arguments = args
@@ -70,7 +70,7 @@ class AlbumDetailsFragment :
         super.onCreate(savedInstanceState)
 
         if (!arguments!!.isEmpty && arguments != null) {
-            albumItem = arguments!!.getParcelable(ALBUM_ITEM_KEY)!!
+            albumItem = (arguments!!.getSerializable(ALBUM_ITEM_KEY) as AlbumItem?)!!
         }
 
         detailViewModel.getAlbumDetails()
@@ -93,7 +93,7 @@ class AlbumDetailsFragment :
 
     override fun initViews() {
 
-        adapter = ItemRecyclerAdapter(itemType = ItemType.TrackIem())
+        adapter = ItemRecyclerAdapter(itemType = ItemType.TrackItem())
 
         viewBinding.toolbar.setOnClickListener(this)
 

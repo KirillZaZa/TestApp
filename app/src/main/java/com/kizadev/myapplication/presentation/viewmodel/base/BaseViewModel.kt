@@ -35,6 +35,6 @@ abstract class BaseViewModel<T>(
         state
             .map(transform)
             .distinctUntilChanged()
-            .observe(owner, Observer { onChanged(it!!) })
+            .observe(owner, Observer { onChanged(it) })
     }
 }

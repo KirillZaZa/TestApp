@@ -116,6 +116,7 @@ class AlbumDetailsFragment :
             tvAlbumGenre.text = state.albumItem.albumGenre
             tvAlbumCountOfTracks.text = state.albumItem.albumTrackCount
             tvAlbumPrice.text = state.albumItem.albumPrice
+            tvSecondAlbumPrice.text = state.albumItem.albumSecondPrice
 
             toolbar.title = state.albumItem.albumName
         }

@@ -50,6 +50,7 @@ class TrackViewHolder(
         with(viewBinding) {
             tvTrackName.text = model.trackName
             tvTrackPrice.text = model.trackPrice
+            tvSecondTrackPrice.text = model.trackSecondPrice
             tvTrackTime.text = model.trackTime
 
             Glide.with(context)

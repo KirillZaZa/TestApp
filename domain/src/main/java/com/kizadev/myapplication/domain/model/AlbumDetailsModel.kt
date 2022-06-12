@@ -8,5 +8,6 @@ data class TrackItem(
     val trackName: String,
     val trackTime: String,
     val trackPrice: String,
-    val trackPhotoUrl: String
+    val trackPhotoUrl: String,
+    val trackSecondPrice: String
 )

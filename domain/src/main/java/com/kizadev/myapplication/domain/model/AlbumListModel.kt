@@ -12,5 +12,6 @@ data class AlbumItem(
     val albumTrackCount: String,
     val albumGenre: String,
     val albumPhotoUrl: String,
-    val albumPrice: String
+    val albumPrice: String,
+    val albumSecondPrice: String
 ) : Serializable

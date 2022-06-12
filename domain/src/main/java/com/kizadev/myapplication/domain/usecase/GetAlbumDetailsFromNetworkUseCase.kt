@@ -6,6 +6,7 @@ import com.kizadev.myapplication.domain.repository.ForaRepository
 import com.kizadev.myapplication.domain.result_wrapper.ResponseResult
 import io.reactivex.Flowable
 import javax.inject.Inject
+import kotlin.random.Random
 
 class GetAlbumDetailsFromNetworkUseCase @Inject constructor(
     private val repository: ForaRepository,
@@ -16,7 +17,8 @@ class GetAlbumDetailsFromNetworkUseCase @Inject constructor(
     ): Flowable<ResponseResult<AlbumDetailsModel>> {
         return repository.getAlbumDetails(collectionId)
             .map { albumDetailsDto ->
-                val albumDetails = albumDetailsDto.mapToAlbumDetailsModel()
+                val randomK = Random.nextDouble(0.55, 1.56)
+                val albumDetails = albumDetailsDto.mapToAlbumDetailsModel(randomK)
 
                 when {
                     albumDetails.albumTracksList.isNullOrEmpty() -> {
